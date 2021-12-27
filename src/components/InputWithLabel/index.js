@@ -15,18 +15,18 @@ export const InputWithLabel = ({
   }, [isFocused]);
   return (
     <>
-      <label htmlFor={id}>
+      <label htmlFor={id} className="label">
         {children}
         <input
           ref={inputRef}
           id={id}
-          type="text"
+          type={type}
           value={value}
           onChange={onInputChange}
           autoFocus={isFocused}
+          className="input"
         />
       </label>
-      <p>{`search for：${value}`}</p>
     </>
   );
 };

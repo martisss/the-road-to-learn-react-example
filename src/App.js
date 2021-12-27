@@ -1,19 +1,12 @@
 import React from "react";
 import axios from "axios";
+import { SearchForm } from "./components/SearchForm";
+import './App.css'
 import { useState, useCallback, useEffect, useReducer } from "react";
 import { useSemiPersistentState } from "./hooks/useSemiPersistentState";
-import { InputWithLabel } from "./components/InputWithLabel";
+
 import { List } from "./components/List";
-import { TextRender } from "./components/TextRender";
-const debounce = (fn, delay = 200) => {
-  let timer = null;
-  if (timer) {
-    console.log(111);
-    clearTimeout(timer);
-    timer = setTimeout(fn, delay);
-  }
-  timer = setTimeout(fn, delay);
-};
+
 
 const API_ENDPOINT = "https://hn.algolia.com/api/v1/search?query=";
 
@@ -122,39 +115,17 @@ function App() {
     }
   }, [url]);
 
-const SearchForm = ({
-  searchValue,
-  onSearchInput,
-  onSearchSubmit
-}) => (
-  <form onSubmit={handleSearchSubmit}>
-    <InputWithLabel
-      id="search"
-      label="Search"
-      isFocused
-      onInputChange={handleSearchInput}
-      value={searchValue}
-    >
-      <TextRender fontWeight={300}>Search: </TextRender>
-    </InputWithLabel>
-    <button type="submit" disabled={!searchValue}>
-      SUBMIT
-    </button>
-  </form>
-)
-
   useEffect(() => {
     handleFetchStories();
   }, [handleFetchStories]);
   return (
-    <div>
-      <h1>My Hacker Stories</h1>
+    <div className="container">
+      <h1 className="headline-primary">My Hacker Stories</h1>
       <SearchForm
         searchValue={searchValue}
         onSearchInput = {handleSearchInput}
         onSearchSubmit={handleSearchSubmit}
       />
-      <hr />
       {stories.isError && <p>Something went wrong</p>}
       {stories.isLoading ? (
         <p>Loading ...</p>
