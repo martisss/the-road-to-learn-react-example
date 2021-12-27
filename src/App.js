@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { SearchForm } from "./components/SearchForm";
-import './App.css'
+import styles from './App.module.css'
 import { useState, useCallback, useEffect, useReducer } from "react";
 import { useSemiPersistentState } from "./hooks/useSemiPersistentState";
 
@@ -119,8 +119,8 @@ function App() {
     handleFetchStories();
   }, [handleFetchStories]);
   return (
-    <div className="container">
-      <h1 className="headline-primary">My Hacker Stories</h1>
+    <div className={styles.container}>
+      <h1 className={styles.headlinePrimary}>My Hacker Stories</h1>
       <SearchForm
         searchValue={searchValue}
         onSearchInput = {handleSearchInput}

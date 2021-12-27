@@ -1,3 +1,4 @@
+import styles from '../../App.module.css'
 import { useRef, useEffect } from "react";
 export const InputWithLabel = ({
   id,
@@ -15,7 +16,7 @@ export const InputWithLabel = ({
   }, [isFocused]);
   return (
     <>
-      <label htmlFor={id} className="label">
+      <label htmlFor={id} className={styles.label}>
         {children}
         <input
           ref={inputRef}
