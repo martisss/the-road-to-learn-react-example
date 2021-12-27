@@ -1,3 +1,5 @@
+import React from "react";
+import axios from "axios";
 import { useState, useCallback, useEffect, useReducer } from "react";
 import { useSemiPersistentState } from "./hooks/useSemiPersistentState";
 import { InputWithLabel } from "./components/InputWithLabel";
@@ -90,8 +92,10 @@ function App() {
   };
 
   // url更新触发副作用以获取新的数据
-  const handleSearchSubmit = () => {
+  const handleSearchSubmit = (event) => {
     setUrl(`${API_ENDPOINT}${searchValue}`);
+    // 阻止浏览器默认事件，否则会导致页面重新加载
+    event.preventDefault();
   };
 
   // 移除指定列表项的回调函数
@@ -104,19 +108,40 @@ function App() {
 
   // 初始化reducer
   // 模拟异步获取数据, 点击submit，更新url, 调用handleFetchStories,更新数据
-  const handleFetchStories = useCallback(() => {
+  const handleFetchStories = useCallback(async () => {
     if (searchValue === "") return;
     dispatchStories({ type: "STORIES_FETCH_INIT" });
-    fetch(`${API_ENDPOINT}${searchValue}`)
-      .then((response) => response.json())
-      .then((result) => {
-        dispatchStories({
-          type: "STORIES_FETCH_SUCCESS",
-          payload: result.hits,
-        });
-      })
-      .catch(() => dispatchStories({ type: "STORIES_FETCH_FAILURE" }));
+    const result = await axios.get(url);
+    try {
+      dispatchStories({
+        type: "STORIES_FETCH_SUCCESS",
+        payload: result.data.hits,
+      });
+    } catch {
+      dispatchStories({ type: "STORIES_FETCH_FAILURE" });
+    }
   }, [url]);
+
+const SearchForm = ({
+  searchValue,
+  onSearchInput,
+  onSearchSubmit
+}) => (
+  <form onSubmit={handleSearchSubmit}>
+    <InputWithLabel
+      id="search"
+      label="Search"
+      isFocused
+      onInputChange={handleSearchInput}
+      value={searchValue}
+    >
+      <TextRender fontWeight={300}>Search: </TextRender>
+    </InputWithLabel>
+    <button type="submit" disabled={!searchValue}>
+      SUBMIT
+    </button>
+  </form>
+)
 
   useEffect(() => {
     handleFetchStories();
@@ -124,20 +149,11 @@ function App() {
   return (
     <div>
       <h1>My Hacker Stories</h1>
-      <InputWithLabel
-        id="search"
-        label="Search"
-        isFocused
-        onInputChange={handleSearchInput}
-        value={searchValue}
-      >
-        <TextRender fontWeight={300}>Search: </TextRender>
-      </InputWithLabel>
-      <button
-        type="button"
-        disabled={!searchValue}
-        onClick={handleSearchSubmit}
-      ></button>
+      <SearchForm
+        searchValue={searchValue}
+        onSearchInput = {handleSearchInput}
+        onSearchSubmit={handleSearchSubmit}
+      />
       <hr />
       {stories.isError && <p>Something went wrong</p>}
       {stories.isLoading ? (
