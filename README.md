@@ -6,4 +6,4 @@
 
 中文版电子书对应的链接在这里：[the-road-to-learn-react](https://leanpub.com/the-road-to-learn-react-chinese/)
 <hr/>
-[demo](road-to-react-demo-6f955.web.app/)通过`firebase`部署
+[demo](https://road-to-react-demo-6f955.web.app/)通过`firebase`部署
